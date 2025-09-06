@@ -1,0 +1,30 @@
+# core
+python-dotenv
+PyPDF2>=3.0.0
+python-docx
+pytesseract
+Pillow
+pdf2image
+pdfminer.six
+docx2txt
+tqdm
+pandas
+PyYAML
+fastapi
+uvicorn
+
+# NLP & embeddings
+sentence-transformers>=2.2.2
+transformers>=4.30.0
+torch>=2.0.0
+
+# vector store
+faiss-cpu
+
+# optional (for advanced parsing)
+spacy
+en_core_web_sm
+
+# utils
+regex
+email-validator

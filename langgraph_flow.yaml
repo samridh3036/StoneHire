@@ -1,0 +1,56 @@
+name: resume_ranking_flow
+nodes:
+  - id: ingest
+    type: function
+    entrypoint: src.agents.ingest.ingest
+    inputs: [zip_path, extracted_dir]
+    outputs: [docs]
+  - id: parse
+    type: map
+    entrypoint: src.agents.parser.parse_resume
+    inputs: [docs]
+    outputs: [parsed_docs]
+  - id: preprocess
+    type: map
+    entrypoint: src.agents.preprocess.preprocess
+    inputs: [parsed_docs]
+    outputs: [preprocessed_docs]
+  - id: embed
+    type: function
+    entrypoint: src.agents.embedder.build_embedding_entries
+    inputs: [preprocessed_docs, embedding_model]
+    outputs: [entries]
+  - id: index
+    type: function
+    entrypoint: src.agents.retriever.FaissIndex
+    inputs: [entries]
+    outputs: [index]
+  - id: jd_parse
+    type: function
+    entrypoint: src.agents.jd_parser.parse_jd   # optional module to implement
+    inputs: [jd_text]
+    outputs: [jd_keywords, jd_constraints]
+  - id: retrieve
+    type: function
+    entrypoint: src.agents.retriever.FaissIndex.search
+    inputs: [index, jd_vector, top_k]
+    outputs: [candidates]
+  - id: rerank
+    type: function
+    entrypoint: src.agents.reranker.CrossReranker.score_pairs
+    inputs: [jd_text, candidates]
+    outputs: [c_scores]
+  - id: fairness
+    type: function
+    entrypoint: src.agents.fairness.apply_simple_fairness
+    inputs: [candidates, protected_field]
+    outputs: [candidates_fair]
+  - id: explain
+    type: map
+    entrypoint: src.agents.explain.explain_candidate
+    inputs: [jd_text, candidates_fair]
+    outputs: [explanations]
+  - id: output
+    type: function
+    entrypoint: src.orchestrator.save_results
+    inputs: [explanations]

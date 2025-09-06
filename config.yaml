@@ -1,0 +1,15 @@
+data:
+  zip_path: "./data/resumes_batch.zip"    # place your zip here
+  extracted_dir: "./data/extracted"
+processing:
+  top_k_retrieve: 100
+  final_top_k: 30
+  embedding_model: "all-mpnet-base-v2"
+  cross_encoder_model: "cross-encoder/ms-marco-MiniLM-L-6-v2"
+scoring:
+  w_e: 0.25
+  w_c: 0.5
+  w_f: 0.25
+fairness:
+  enabled: false
+  protected_fields: ["university","graduation_year"]
