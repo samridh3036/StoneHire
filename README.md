@@ -1,1 +1,1 @@
-"# StoneHire" 
+# StoneHire for LocoBuzz Solutions
